@@ -165,7 +165,7 @@
     document.getElementById("f").onsubmit = e => {
       e.preventDefault();
       const n = P.puhdasNimi(inp.value);
-      if (!inp.value.trim()) return toast("Kirjoita nimi");
+      if (!inp.value.trim() || n === "Nimetön") return toast("Kirjoita nimi");
       kirjoita("nimi", n); jatko();
     };
   }

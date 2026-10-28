@@ -41,15 +41,17 @@ const VERKKO = (() => {
     let tunniste = lue("tunniste", "");
     if (!tunniste) { tunniste = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()).replace(/[^\w-]/g, ""); kirjoita("tunniste", tunniste); }
     const d = await pyynto("/v2/session/guest", { method: "POST", body: JSON.stringify({ game_key: avain, game_version: VERSIO, player_identifier: tunniste }) });
-    istunto = { token: d.session_token, pelaaja: d.player_id };
+    istunto = { token: d.session_token, pelaaja: d.player_id, nimi: d.player_name || "" };
     return istunto;
   }
 
+  // Verrataan palvelimen nimeen eikä selaimen muistiin, ettei tulos jää nimettömäksi, jos nimen asetus on joskus epäonnistunut
   async function asetaNimi(nimi) {
     const siisti = String(nimi || "").replace(/[\u0000-\u001f<>]/g, "").trim().slice(0, 24);
-    if (!siisti || lue("nimi", "") === siisti) return;
+    if (!siisti) throw new Error("nimi puuttuu");
+    if (istunto.nimi === siisti) return;
     await pyynto("/player/name", { method: "PATCH", body: JSON.stringify({ name: siisti }) });
-    kirjoita("nimi", siisti);
+    istunto.nimi = siisti;
   }
 
   // Lähetysjono: jos verkko ei toimi, tulos odottaa selaimessa ja lähtee seuraavalla kerralla. Yksi tulos per ottelu (tunnus).
@@ -58,7 +60,7 @@ const VERKKO = (() => {
     const jono = lue("jono", []);
     if (!jono.length) return;
     await kirjaudu();
-    await asetaNimi(nimi).catch(() => {});
+    await asetaNimi(nimi);   // ilman nimeä tulos jää jonoon ja lähtee seuraavalla kerralla
     const lahetetyt = lue("lahetetyt", []);
     for (const r of jono.slice()) {
       if (!lahetetyt.includes(r.tunnus)) {
@@ -90,7 +92,7 @@ const VERKKO = (() => {
     const d = await pyynto("/leaderboards/" + TAULUT[taulu] + "/list?count=" + (maara || 20), { method: "GET" });
     return (d.items || []).map(x => ({
       sija: x.rank, pisteet: x.score,
-      nimi: (x.player && x.player.name) || "Nimetön",
+      nimi: (x.player && x.player.name) || "Pelaaja " + ((x.player && x.player.public_uid) || "").slice(0, 4),
       mina: !!(x.player && istunto && x.player.id === istunto.pelaaja)
     }));
   }
@@ -107,13 +109,20 @@ const VERKKO = (() => {
       const rivit = d.items || [];
       rivit.forEach(x => {
         if (!String(x.member_id || "").startsWith(alku)) return;
-        let nimi = "Nimetön"; try { nimi = JSON.parse(x.metadata || "{}").n || nimi; } catch (e) {}
-        tulos.push({ nimi, pisteet: x.score, mina: istunto && String(x.member_id) === alku + istunto.pelaaja });
+        let nimi = ""; try { nimi = JSON.parse(x.metadata || "{}").n || ""; } catch (e) {}
+        tulos.push({ nimi, id: String(x.member_id).slice(alku.length), pisteet: x.score, mina: istunto && String(x.member_id) === alku + istunto.pelaaja });
       });
       if (rivit.length < 500 || !d.pagination || d.pagination.next_cursor == null) break;
       jalkeen = d.pagination.next_cursor;
     }
-    return tulos;
+    // Generic-taulu ei palauta pelaajaa, ja metadata kulkee vain, jos taululla on Metadata-asetus: nimet haetaan pelaajatunnisteista
+    const haettavat = [...new Set(tulos.filter(t => !t.nimi && /^\d+$/.test(t.id)).map(t => t.id))].slice(0, 50);
+    if (haettavat.length) {
+      const d = await pyynto("/player/lookup/name?" + haettavat.map(i => "player_id=" + i).join("&"), { method: "GET" }).catch(() => ({}));
+      const nimet = Object.fromEntries((d.players || []).map(p => [String(p.player_id), p.name]));
+      tulos.forEach(t => { if (!t.nimi) t.nimi = nimet[t.id] || "Pelaaja " + t.id.slice(-4); });
+    }
+    return tulos.map(({ nimi, pisteet, mina }) => ({ nimi: nimi || "Nimetön", pisteet, mina }));
   }
 
   return { kaytossa: !!avain, kelpaa, laheta, lista, haasteTulokset, tyhjenna, TAULUT, RAJAT };
