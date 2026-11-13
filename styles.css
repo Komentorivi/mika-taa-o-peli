@@ -49,10 +49,11 @@ button.siru:active { transform: scale(.95); }
 .ruutu { position: relative; border: 0; margin: 0; padding: 0; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07), 0 0 0 1px #10102a; cursor: pointer; background: linear-gradient(145deg, #2a2a55, #1b1b3a); color: #fff; font: 400 clamp(1.1rem, 6vw, 1.9rem) "Bungee", sans-serif; display: grid; place-items: center; transition: opacity .35s, transform .35s; touch-action: manipulation; }
 /* Ruudussa näkyy vain hinta, isona (viimeistely 2026-11-13: numerot 1–16 eivät merkinneet mitään ja peittivät hinnan).
    Väri kertoo kalleuden: kulma vaalea, reuna valkoinen, keskusta pinkki, Tiedän!-painalluksen jälkeen kaikki pinkkejä. */
-.ruutu .hinta { font: 400 clamp(.75rem, 3.6vw, 1.1rem) "Bungee", sans-serif; font-variant-numeric: tabular-nums; color: #fff; pointer-events: none; }
+.ruutu .hinta { font: 400 clamp(.72rem, 3.3vw, 1rem) "Bungee", sans-serif; font-variant-numeric: tabular-nums; color: #fff; pointer-events: none; }
 /* Reunakehä on halpa (Mikko 2026-11-13): vaalea sininen hinta ja tummempi pohja, ettei se näytä samalta kuin kallis keskusta */
 .ruutu.paikka-kulma .hinta, .ruutu.paikka-reuna .hinta { color: #b9c6ff; }
-.ruutu.paikka-kulma, .ruutu.paikka-reuna { background: linear-gradient(145deg, #23234a, #17172f); }
+.ruutu.paikka-kulma, .ruutu.paikka-reuna { background: linear-gradient(145deg, #1f1f42, #15152b); }
+.ruutu.paikka-keha { background: linear-gradient(145deg, #2e2e5e, #1f1f40); }
 .ruutu.paikka-keski { background: linear-gradient(145deg, #4a2560, #2c1a45); }
 .ruutu.paikka-keski .hinta { color: var(--pink); text-shadow: 0 0 10px rgba(255, 61, 139, .45); }
 .kallis .ruutu { background: linear-gradient(145deg, #5a1f3a, #321628); }
@@ -61,7 +62,7 @@ button.siru:active { transform: scale(.95); }
 @media (hover: hover) { .ruutu:hover { filter: brightness(1.35); z-index: 1; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .35), 0 0 0 1px #10102a; } }
 .ruutu:active { transform: scale(.94); filter: brightness(1.5); transition-duration: .05s; }
 .ruutu.auki { opacity: 0; transform: scale(.9); pointer-events: none; }
-.paljastus .ruutu { opacity: 0; transform: scale(.9); pointer-events: none; transition-delay: calc(var(--n) * 25ms); }
+.paljastus .ruutu { opacity: 0; transform: scale(.9); pointer-events: none; transition-delay: calc(var(--n) * 18ms); }
 .leima { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-8deg); font: 400 clamp(1.6rem, 8vw, 2.4rem) "Bungee", sans-serif; padding: 6px 16px; border: 4px solid currentColor; border-radius: 12px; background: rgba(11, 11, 26, .75); animation: leima .35s ease-out; white-space: nowrap; }
 .leima.oikein { color: var(--green); } .leima.vaarin { color: var(--red); }
 .leima { text-align: center; line-height: 1.05; }

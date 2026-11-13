@@ -13,15 +13,14 @@ const PELI = (() => {
     // sulaminen nopeaa heti alusta: 5 s: 17,5 %, 10 s: 40 %, 15 s: 67,5 %, 20 s: 100 % (ennen 10 s: 19 %).
     SULAA_A: 0.6, SULAA_B: 0.4,
     AIKA: 20,           // kokonaisaika sekunteina; "Tiedän!" ei pidennä sitä
-    // Mikko 2026-11-13: 4×4 oli liian vähän, yksi ruutu paljasti liikaa (6,25 % kuvasta). Kokeiltu 5×5 (4 %), nyt kokeilussa
-    // 6×6 (2,8 %). Koko vaihtuu pelkällä LEVEYS-arvolla: ruudukko, sijainnit ja tyylit seuraavat sitä.
-    LEVEYS: 6, RUUDUT: 36,
-    // Ruutu maksaa osuuden jäljellä olevasta potista (Mikko 2026-10-27: kiinteät hinnat veivät potin nollaan): 1. ruutu 3,5 %,
-    // 2. 4,5 %, 3. 5,5 % ja +1 % joka avauksella (pienempi ruutu paljastaa vähemmän, joten se maksaa vähemmän; 5×5:ssä 5 % + 1,5 %),
-    // kerrottuna sijainnilla ja Tiedän!-painalluksen jälkeen kahdella, enintään 60 %. Mikko 2026-11-13: sisin 4×4 reilusti
-    // kalliimpi (1,5 ei erottunut → 2,5) ja reunakehä todella halpa, koska kukaan ei avaa sieltä (reuna 0,4, kulma 0,25).
-    OSUUS_ALKU: 0.035, OSUUS_ASKEL: 0.01, OSUUS_MAX: 0.6,
-    PAIKKA: { kulma: 0.25, reuna: 0.4, keski: 2.5 },
+    // Mikko 2026-11-13: 4×4 oli liian vähän, yksi ruutu paljasti liikaa (6,25 % kuvasta). Kokeiltu 5×5 ja 6×6; nyt 7×7
+    // (2 % kuvasta), jotta keskelle mahtuu 3×3, sen ympärille kehä ja ulos halpa reuna. Koko vaihtuu pelkällä LEVEYS-arvolla.
+    LEVEYS: 7, RUUDUT: 49,
+    // Ruutu maksaa osuuden jäljellä olevasta potista (Mikko 2026-10-27: kiinteät hinnat veivät potin nollaan): perusosuus
+    // OSUUS_ALKU + OSUUS_ASKEL × avatut, kerrottuna sijainnilla ja Tiedän!-painalluksen jälkeen kahdella, enintään 60 %.
+    // Mikko 2026-11-13: keskimmäinen 3×3 kallein, sitä kiertävä kehä hiukan kalliimpi, reuna todella halpa (kukaan ei avaa sieltä).
+    OSUUS_ALKU: 0.03, OSUUS_ASKEL: 0.008, OSUUS_MAX: 0.6,
+    PAIKKA: { kulma: 0.25, reuna: 0.4, keha: 1, keski: 2.5 },
     JALKEEN: 2,
     VASTAUSAIKA: 8,     // enintään näin monta sekuntia vastata "Tiedän!"-painalluksen jälkeen (tai vähemmän, jos kokonaisaika loppuu)
     LIIGA_KUVIA: 10, PAIVA_KUVIA: 5
@@ -106,10 +105,10 @@ const PELI = (() => {
 
   // Ruudun hinta: osuus potista; monesko avattava ruutu (kiihtyy) × sijainti (kulmat halvimpia, keskusta kallein) × Tiedän!-kerroin
   function paikka(r) {
-    const L = S.LEVEYS, x = r % L, y = Math.floor(r / L), reunaX = x === 0 || x === L - 1, reunaY = y === 0 || y === L - 1;
-    // Keskusta = kaikki reunakehän sisällä (6×6:ssa sisin 4×4). Mikko 2026-11-13: kokeiltiin 2×2-keskustaa, mutta kallis
-    // alue saa olla 4×4, kunhan se on reilusti kalliimpi (PAIKKA.keski 2,5).
-    return reunaX && reunaY ? "kulma" : reunaX || reunaY ? "reuna" : "keski";
+    // Etäisyys lähimpään reunaan: 0 = reuna (kulmat erikseen), välissä kehä, keskimmäiset 3×3 (parillisessa 2×2) = keskusta
+    const L = S.LEVEYS, x = r % L, y = Math.floor(r / L), d = Math.min(x, y, L - 1 - x, L - 1 - y);
+    if (d === 0) return (x === 0 || x === L - 1) && (y === 0 || y === L - 1) ? "kulma" : "reuna";
+    return d >= Math.ceil((L - 3) / 2) ? "keski" : "keha";
   }
   function perusosuus(monesko) { return S.OSUUS_ALKU + S.OSUUS_ASKEL * monesko; }
   function osuus(t, r) {

@@ -544,3 +544,108 @@ Kaikki kuvat ovat Wikimedia Commonsista. Ne on rajattu neliöiksi ja pienennetty
 | `raketti.webp` | Raketti | Bill Ingalls | [Public domain](https://commons.wikimedia.org/wiki/File:Soyuz_TMA-5_launch.jpg) |
 | `astronautti.webp` | Astronautti | NASA | [Public domain](https://commons.wikimedia.org/wiki/File:Bruce_McCandless_II_during_EVA_in_1984.jpg) |
 | `valkosipuli.webp` | Valkosipuli | Ivar Leidus | [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Garlic_bulbs_and_cloves.jpg) |
+| `koala.webp` | Koala | Quartl | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Friendly_Female_Koala.JPG) |
+| `kameli.webp` | Kameli | Jjron | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:07._Camel_Profile,_near_Silverton,_NSW,_07.07.2007.jpg) |
+| `laama.webp` | Laama | Johann "nojhan" Dréo | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Llama_lying_down.jpg) |
+| `pesukarhu.webp` | Pesukarhu | Tuntematon | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Procyon_lotor_(raccoon).jpg) |
+| `laiskiainen.webp` | Laiskiainen | Stefan Laube (Tauchgurke) | [Public domain](https://commons.wikimedia.org/wiki/File:Bradypus.jpg) |
+| `piikkisika.webp` | Piikkisika | Dori | [CC BY 2.0](https://commons.wikimedia.org/wiki/File:Henry_Vilas_Zoo_IMG_2385.jpg) |
+| `peippo.webp` | Peippo | Ryan Hodnett | [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Common_Chaffinch_(Fringilla_coelebs)_-_Oslo,_Norway_(01).jpg) |
+| `merihevonen.webp` | Merihevonen | Tuntematon | [Public domain](https://commons.wikimedia.org/wiki/File:Hippocampus.jpg) |
+| `rausku.webp` | Rausku | jon hanson from london, UK | [CC BY-SA 2.0](https://commons.wikimedia.org/wiki/File:Manta_birostris-Thailand3.jpg) |
+| `lohi.webp` | Lohi | Hans-Petter Fjeld | [CC BY-SA 2.5](https://commons.wikimedia.org/wiki/File:Salmo_trutta_Trout_Aquarium_Atlanterhavsparken_Norway.jpg) |
+| `miekkavalas.webp` | Miekkavalas | Robert Pittman | [Public domain](https://commons.wikimedia.org/wiki/File:Killerwhales_jumping.jpg) |
+| `tuhatjalkainen.webp` | Tuhatjalkainen | Tuntematon | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Lithobius_forficatus.jpg) |
+| `skorpioni.webp` | Skorpioni | Per-Anders Olsson | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Black_scorpion.jpg) |
+| `sisilisko.webp` | Sisilisko | Tuntematon | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Lacerta_vivipara_1_(Marek_Szczepanek).jpg) |
+| `hamsteri.webp` | Hamsteri | Love hamster | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:%D0%97%D0%BE%D0%BB%D0%BE%D1%82%D0%B8%D1%81%D1%82%D1%8B%D0%B9_%D1%85%D0%BE%D0%BC%D1%8F%D1%87%D0%BE%D0%BA.jpg) |
+| `undulaatti.webp` | Undulaatti | Melopsittacus_undulatus_-Fort_Worth_Zoo-8a.jpg: Jerry Tillery derivative work: S | [CC BY 2.0](https://commons.wikimedia.org/wiki/File:Melopsittacus_undulatus_-Fort_Worth_Zoo-8a-4c.jpg) |
+| `lasagne.webp` | Lasagne | Adriano | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Lasagne.jpg) |
+| `taco.webp` | Taco | Mike McCune | [CC BY 2.0](https://commons.wikimedia.org/wiki/File:Carnitas.jpg) |
+| `hernekeitto.webp` | Hernekeitto | User:Erbsensuppe | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Erbsensuppenteller.jpg) |
+| `joulutorttu.webp` | Joulutorttu | Mysid | [Public domain](https://commons.wikimedia.org/wiki/File:Joulutorttuja.jpg) |
+| `tyrni.webp` | Tyrni | Jean Tosti | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Hippophae_rhamnoides3.jpg) |
+| `kangasrousku.webp` | Kangasrousku | Jerzy Opioła | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Lactarius_rufus_B%C5%BB5.jpg) |
+| `kataja.webp` | Kataja | Tuntematon | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Jalowiec_jagody1.jpg) |
+| `lumme.webp` | Lumme | Kristian Peters -- Fabelfroh 15:37, 1 October 2006 (UTC) | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Nyphaea_alba.jpeg) |
+| `jaatikko.webp` | Jäätikkö | Paasikivi | [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:BossonsGlacierGlacierDesBossonsBossoninj%C3%A4%C3%A4tikk%C3%B6.jpg) |
+| `atolli.webp` | Atolli | No machine-readable author provided. Marshman~commonswiki assumed (based on copy | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Fakaofo_Atoll.jpg) |
+| `kanjoni.webp` | Kanjoni | KlausF | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Blkyde_River_Canyon.jpg) |
+| `suomenlinna.webp` | Suomenlinna | Migro | [Public domain](https://commons.wikimedia.org/wiki/File:Suomenlinna_aerial.JPG) |
+| `sibelius-monumentti.webp` | Sibelius-monumentti | СЕРП75ДНІПРО | [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:%D0%9F%D0%B0%D0%BC%27%D1%8F%D1%82%D0%BD%D0%B8%D0%BA_%D0%AF%D0%BD%D1%83_%D0%A1%D1%96%D0%B1%D0%B5%D0%BB%D1%96%D1%83%D1%81%D1%83_%D1%83_%D0%93%D0%B5%D0%BB%D1%8C%D1%81%D1%96%D0%BD%D0%BA%D1%96.jpg) |
+| `louvre.webp` | Louvre | Jebulon | [CC0](https://commons.wikimedia.org/wiki/File:Louvre_aile_Richelieu.jpg) |
+| `angkor-wat.webp` | Angkor Wat | Charles J Sharp | [CC BY 2.5](https://commons.wikimedia.org/wiki/File:Angkor-Wat-from-the-air.JPG) |
+| `alhambra.webp` | Alhambra | jan zeschky from glasgow, scotland | [CC BY 2.0](https://commons.wikimedia.org/wiki/File:Palacio_del_P%C3%B3rtico.jpg) |
+| `chichen-itza.webp` | Chichén Itzá | Keith Pomakis | [CC BY-SA 2.5](https://commons.wikimedia.org/wiki/File:Templo_de_los_Guerreros.jpg) |
+| `winston-churchill.webp` | Winston Churchill | Tuntematon | [Public domain](https://commons.wikimedia.org/wiki/File:Sir_Winston_Churchill_-_19086236948.jpg) |
+| `suuri-aalto-kanagawan-edustalla.webp` | Suuri aalto Kanagawan edustalla | Katsushika Hokusai | [Public domain](https://commons.wikimedia.org/wiki/File:Tsunami_by_hokusai_19th_century.jpg) |
+| `vapaus-johtaa-kansaa.webp` | Vapaus johtaa kansaa | Eugène Delacroix | [Public domain](https://commons.wikimedia.org/wiki/File:La_Libert%C3%A9_guidant_le_peuple_-_Eug%C3%A8ne_Delacroix_-_Mus%C3%A9e_du_Louvre_Peintures_RF_129_-_apr%C3%A8s_restauration_2024.jpg) |
+| `kurottaja.webp` | Kurottaja | bdk | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:New_Holland_LM5060_telehandler_1.jpg) |
+| `kaukosaadin.webp` | Kaukosäädin | Air fans | [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Telecomando_televisore_Sony.jpg) |
+| `peliohjain.webp` | Peliohjain | PJ | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Snes_control.jpg) |
+| `kuulokkeet.webp` | Kuulokkeet | Ballerinus | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:In-ears-earphones.png) |
+| `avain.webp` | Avain | Quistnix at Dutch Wikipedia | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Diverse_sleutels.jpg) |
+| `riippulukko.webp` | Riippulukko | J-P Kärnä | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Abloy-riippulukko.jpg) |
+| `suurennuslasi.webp` | Suurennuslasi | Tomomarusan | [CC BY 2.5](https://commons.wikimedia.org/wiki/File:Magnifying_glass.jpg) |
+| `ankkuri.webp` | Ankkuri | Tuntematon | [Public domain](https://commons.wikimedia.org/wiki/File:Admiralty_anchor.JPG) |
+| `kaleidoskooppi.webp` | Kaleidoskooppi | photo taken by H. Pellikka | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:View_of_a_kaleidoscope.JPG) |
+| `sulkapallo.webp` | Sulkapallo | Wilson Dias/ABr | [CC BY 3.0 br](https://commons.wikimedia.org/wiki/File:Badminton_Semifinal_Pan_2007.jpg) |
+| `poytatennis.webp` | Pöytätennis | Tuntematon | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Competitive_table_tennis.jpg) |
+| `salibandy.webp` | Salibandy | Tuntematon | [Public domain](https://commons.wikimedia.org/wiki/File:Floorball_game.jpg) |
+| `keilailu.webp` | Keilailu | Mateo.ag 98 | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:ClaraJulianaGuerrero.jpg) |
+| `kaksikerroksinen-linja-auto.webp` | Kaksikerroksinen linja-auto | SIA321 | [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:LTZ1328-19-20241030-160332.jpg) |
+| `hinausauto.webp` | Hinausauto | SuperTank17 | [CC BY 3.0](https://commons.wikimedia.org/wiki/File:FSO_125p_1.5_ME_on_a_Volkswagen_LT-based_roadside_assistance_truck_on_Jana_Kili%C5%84skiego_street_in_Krak%C3%B3w_(6).jpg) |
+| `kontrabasso.webp` | Kontrabasso | User:AndrewKepert | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:AGK_bass1_full.jpg) |
+| `mandoliini.webp` | Mandoliini | ZngZng | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Maniska.JPG) |
+| `juustohoyla.webp` | Juustohöylä | Jonas Bergsten | [Public domain](https://commons.wikimedia.org/wiki/File:Osthyvel_20050723_001.jpg) |
+| `lapaset.webp` | Lapaset | Petritap | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Finnish_mittens.jpg) |
+| `solmio.webp` | Solmio | Tore Nergaard | [Public domain](https://commons.wikimedia.org/wiki/File:Dress-pinstripe.jpg) |
+| `spektroliitti.webp` | Spektroliitti | Shaddack | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Spectrolite1.jpg) |
+| `rikkikiisu.webp` | Rikkikiisu | Ivar Leidus | [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Pyrite_-_Huanzala_mine,_Huallanca,_Bolognesi,_Ancash,_Peru.jpg) |
+| `mars.webp` | Mars | Mars_Valles_Marineris.jpeg: NASA picture derivative work: Lošmi (talk) | [Public domain](https://commons.wikimedia.org/wiki/File:Mars_Valles_Marineris_EDIT.jpg) |
+| `kansainvalinen-avaruusasema.webp` | Kansainvälinen avaruusasema | NASA | [Public domain](https://commons.wikimedia.org/wiki/File:STS-134_International_Space_Station_after_undocking.jpg) |
+| `lehtipuhallin.webp` | Lehtipuhallin | chris 論 | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:LeafBlowerVac.jpg) |
+| `viron-lippu.webp` | Viron lippu | Original: Unknown author Vector: SKopp, PeepP and ‍others | [Public domain](https://commons.wikimedia.org/wiki/File:Flag_of_Estonia.svg) |
+| `japanin-lippu.webp` | Japanin lippu | Various | [Public domain](https://commons.wikimedia.org/wiki/File:Flag_of_Japan.svg) |
+| `kanadan-lippu.webp` | Kanadan lippu | Created by George F. G. Stanley / E Pluribus Anthony / User:Mzajac | [Public domain](https://commons.wikimedia.org/wiki/File:Flag_of_Canada.svg) |
+| `vesa-matti-loiri.webp` | Vesa-Matti Loiri | Soppakanuuna | [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Vesa-Matti_Loiri_2011.jpg) |
+| `greta-thunberg.webp` | Greta Thunberg | Kushal Das | [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Greta_Thunberg_Stockholm_2024_(3x4_cropped).jpg) |
+| `zlatan-ibrahimovic.webp` | Zlatan Ibrahimović | Meghdad Madadi | [CC BY 4.0](https://commons.wikimedia.org/wiki/File:Zlatan_Ibrahimovi%C4%87_June_2018.jpg) |
+| `pelikaani.webp` | Pelikaani | Doug Janson | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Pelecanus_crispus-20030720.jpg) |
+| `kattohaikara.webp` | Kattohaikara | Dion Art | [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:%D0%90%D0%B8%D1%81%D1%82%D1%8B_%D0%BD%D0%B0_%D0%B3%D0%BD%D0%B5%D0%B7%D0%B4%D0%B5_(Ciconia_ciconia).jpg) |
+| `merisiili.webp` | Merisiili | Raphaël Rigo (Trou) | [CC BY-SA 2.5](https://commons.wikimedia.org/wiki/File:SeaUrchin.jpg) |
+| `kimalainen.webp` | Kimalainen | André Karwath aka Aka | [CC BY-SA 2.5](https://commons.wikimedia.org/wiki/File:Bombus_hypnorum_male_-_side_(aka).jpg) |
+| `ampiainen.webp` | Ampiainen | Holger Gröschl | [CC BY-SA 2.0 de](https://commons.wikimedia.org/wiki/File:Vespula_vulgaris5.jpg) |
+| `kiivi.webp` | Kiivi | Hiperpinguino | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Hardy-Kiwi-Comparison-3.jpg) |
+| `vesimeloni.webp` | Vesimeloni | Len Worthington | [CC BY-SA 2.0](https://commons.wikimedia.org/wiki/File:Citrullus_lanatus_(Thunb.)_Cucurbitaceae_(7174523558).jpg) |
+| `avokado.webp` | Avokado | Petar43 | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Fiori_e_frutti_di_avocado.JPG) |
+| `mammi.webp` | Mämmi | Kotivalo | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:M%C3%A4mmi_Finnish_Easter_dessert.jpg) |
+| `mustikkapiirakka.webp` | Mustikkapiirakka | Anneli Salo | [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Mustikkapiirakka_2,_kyps%C3%A4_C_IMG_7763.jpg) |
+| `taytekakku.webp` | Täytekakku | Scheinwerfermann | [Public domain](https://commons.wikimedia.org/wiki/File:Pound_layer_cake.jpg) |
+| `orvokki.webp` | Orvokki | Hugo.arg | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:ViolaWittrockiana001.JPG) |
+| `sinivuokko.webp` | Sinivuokko | Tuntematon | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Hepatica_nobilis_flowers.JPG) |
+| `sananjalka.webp` | Sananjalka | Hugo.arg | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:DidzialapisSakys.JPG) |
+| `temppeliaukion-kirkko.webp` | Temppeliaukion kirkko | Pertsaboy | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Temppeliaukio_Church_3.jpg) |
+| `pyynikin-nakotorni.webp` | Pyynikin näkötorni | Tiia Monto | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Pyynikki_tower.jpg) |
+| `atomium.webp` | Atomium | Zairon | [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Laeken_Atomium_06.jpg) |
+| `wolfgang-amadeus-mozart.webp` | Wolfgang Amadeus Mozart | Barbara Krafft | [Public domain](https://commons.wikimedia.org/wiki/File:Wolfgang-amadeus-mozart_1.jpg) |
+| `leonardo-da-vinci.webp` | Leonardo da Vinci | Leonardo da Vinci | [Public domain](https://commons.wikimedia.org/wiki/File:Leonardo_self.jpg) |
+| `martin-luther-king.webp` | Martin Luther King | Bernie Faingold | [Public domain](https://commons.wikimedia.org/wiki/File:Martin_Luther_King,_Jr..jpg) |
+| `juotoskolvi.webp` | Juotoskolvi | Soldering_iron_and_accessories.jpg: oomlout derivative work: Bomazi | [CC BY-SA 2.0](https://commons.wikimedia.org/wiki/File:Soldering_iron_(UK_Plug).jpg) |
+| `jaakaappi.webp` | Jääkaappi | LGEPR | [CC BY 2.0](https://commons.wikimedia.org/wiki/File:LG%EC%A0%84%EC%9E%90,_%E2%80%98%EC%98%AC%ED%95%B4%EC%9D%98_%EB%85%B9%EC%83%89%EC%83%81%ED%92%88%E2%80%99_%EC%97%85%EA%B3%84_%EC%B5%9C%EB%8B%A4_%EC%88%98%EC%83%81.jpg) |
+| `astianpesukone.webp` | Astianpesukone | User:WestportWiki | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Miele_Sep_3013.jpg) |
+| `tuuletin.webp` | Tuuletin | Tuntematon | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Kawasaki-Electric_Fan.jpg) |
+| `otsalamppu.webp` | Otsalamppu | Multimotyl (Jiří Dobrý) | [CC BY 3.0](https://commons.wikimedia.org/wiki/File:Petzl_tikka_xp.jpg) |
+| `palapeli.webp` | Palapeli | Piero at Dutch Wikipedia | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Legpuzzel.JPG) |
+| `gondoli.webp` | Gondoli | Saffron Blaze | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Venice_Gondola_Grand_Canal.jpg) |
+| `ilmatyynyalus.webp` | Ilmatyynyalus | Andrew Berridge | [CC BY-SA 2.5](https://commons.wikimedia.org/wiki/File:SRN4_Hovercraft_Mountbatten_Class.jpg) |
+| `paloauto.webp` | Paloauto | Tuntematon | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:ChicoCAEngine4.jpg) |
+| `sakkipilli.webp` | Säkkipilli | Postdlf | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Bagpiper_in_Edinburgh_001.jpg) |
+| `mortteli.webp` | Mortteli | KoS | [Public domain](https://commons.wikimedia.org/wiki/File:Mortier_Pillon.jpg) |
+| `rusetti.webp` | Rusetti | www.Pixel.la Free Stock Photos | [CC0](https://commons.wikimedia.org/wiki/File:Bow-tie-businessman-fashion-man_(24217739102).jpg) |
+| `chili.webp` | Chili | Daniel Risacher | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Thai_peppers.jpg) |
+| `lumikengat.webp` | Lumikengät | SeppVei | [Public domain](https://commons.wikimedia.org/wiki/File:Pair_of_snowshoes.JPG) |
+| `brasilian-lippu.webp` | Brasilian lippu | Raimundo Teixeira Mendes | [Public domain](https://commons.wikimedia.org/wiki/File:Flag_of_Brazil.svg) |
+| `liitutaulu.webp` | Liitutaulu | Sidik iz PTU | [CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Sidewalk_chalk_in_school.JPG) |
+| `mr-lordi.webp` | Mr. Lordi | S. Bollmann | [Attribution](https://commons.wikimedia.org/wiki/File:Lordi_Metal_Frenzy_2025_21.jpg) |
+| `lady-gaga.webp` | Lady Gaga | Carlos M. Vazquez II | [CC BY 2.0](https://commons.wikimedia.org/wiki/File:Lady_Gaga_at_Joe_Biden%27s_inauguration_(cropped).jpg) |
