@@ -13,12 +13,14 @@ const PELI = (() => {
     // sulaminen nopeaa heti alusta: 5 s: 17,5 %, 10 s: 40 %, 15 s: 67,5 %, 20 s: 100 % (ennen 10 s: 19 %).
     SULAA_A: 0.6, SULAA_B: 0.4,
     AIKA: 20,           // kokonaisaika sekunteina; "Tiedän!" ei pidennä sitä
-    // Mikko 2026-11-13: 4×4 oli liian vähän, yksi ruutu paljasti liikaa (6,25 % kuvasta) → 5×5 (4 % kuvasta)
-    LEVEYS: 5, RUUDUT: 25,
-    // Ruutu maksaa osuuden jäljellä olevasta potista (Mikko 2026-10-27: kiinteät hinnat veivät potin nollaan): 1. ruutu 5 %,
-    // 2. 6,5 %, 3. 8 % ja +1,5 % joka avauksella (5×5:ssä ruutu paljastaa vähemmän, joten se maksaa vähemmän), kerrottuna
-    // sijainnilla (kulma 0,6, reuna 1, keskusta = sisin 3×3 1,5) ja "Tiedän!"-painalluksen jälkeen kahdella, enintään 60 %.
-    OSUUS_ALKU: 0.05, OSUUS_ASKEL: 0.015, OSUUS_MAX: 0.6,
+    // Mikko 2026-11-13: 4×4 oli liian vähän, yksi ruutu paljasti liikaa (6,25 % kuvasta). Kokeiltu 5×5 (4 %), nyt kokeilussa
+    // 6×6 (2,8 %). Koko vaihtuu pelkällä LEVEYS-arvolla: ruudukko, sijainnit ja tyylit seuraavat sitä.
+    LEVEYS: 6, RUUDUT: 36,
+    // Ruutu maksaa osuuden jäljellä olevasta potista (Mikko 2026-10-27: kiinteät hinnat veivät potin nollaan): 1. ruutu 3,5 %,
+    // 2. 4,5 %, 3. 5,5 % ja +1 % joka avauksella (pienempi ruutu paljastaa vähemmän, joten se maksaa vähemmän; 5×5:ssä 5 % + 1,5 %),
+    // kerrottuna sijainnilla (kulma 0,6, reuna 1, keskusta = kaikki reunarenkaan sisällä 1,5) ja Tiedän!-painalluksen
+    // jälkeen kahdella, enintään 60 %.
+    OSUUS_ALKU: 0.035, OSUUS_ASKEL: 0.01, OSUUS_MAX: 0.6,
     PAIKKA: { kulma: 0.6, reuna: 1, keski: 1.5 },
     JALKEEN: 2,
     VASTAUSAIKA: 8,     // enintään näin monta sekuntia vastata "Tiedän!"-painalluksen jälkeen (tai vähemmän, jos kokonaisaika loppuu)

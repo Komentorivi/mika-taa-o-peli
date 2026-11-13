@@ -390,7 +390,7 @@
       <div class="aikapalkki mb-3" id="aika"><i style="width:100%"></i></div>
       <div class="kuvalaatikko mx-auto" id="laatikko">
         <img id="img" alt="Arvattava kuva" draggable="false" style="${lahikuvaTyyli(kr)}">
-        <div class="ruudukko" id="ruudukko">${t.k.auki.map((a, i) => `<button class="ruutu paikka-${P.paikka(i)}" style="--n:${i}" data-r="${i}"><span class="hinta"></span></button>`).join("")}</div>
+        <div class="ruudukko" id="ruudukko" style="--l:${S.LEVEYS}">${t.k.auki.map((a, i) => `<button class="ruutu paikka-${P.paikka(i)}" style="--n:${i}" data-r="${i}"><span class="hinta"></span></button>`).join("")}</div>
         <div class="alkuruutu" id="alkuruutu" aria-hidden="true"><div class="nro">Kuva ${t.i + 1}/${t.kierrokset.length}</div>
           ${tasoVaihtui ? `<div class="tasoteksti taso-${kr.taso}">${TASO_OTSIKKO[kr.taso]}</div><div class="tasopotti">potti ${luku(kr.potti)}</div>` : ""}</div>
       </div>

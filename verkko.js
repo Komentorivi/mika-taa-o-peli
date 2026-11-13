@@ -13,7 +13,7 @@ const VERKKO = (() => {
   // Testiajuri (testit/selain.swift) avaa pelin osoitteella ?ui=n: silloin ei lähetetä mitään oikeaan tulostauluun
   const testi = typeof location !== "undefined" && /[?&]ui=/.test(location.search);
   const avain = !testi && typeof LOOTLOCKER_AVAIN === "string" ? LOOTLOCKER_AVAIN.trim() : "";
-  const VERSIO = "1.1.0";   // 1.1.0 (2026-11-13): 5×5-ruudukko, 20 s aika
+  const VERSIO = "1.1.0";   // 1.1.0 (2026-11-13): 6×6-ruudukko, 20 s aika
   let istunto = null;
 
   const lue = (k, oletus) => { try { const v = localStorage.getItem("mto.ll." + k); return v == null ? oletus : JSON.parse(v); } catch (e) { return oletus; } };
