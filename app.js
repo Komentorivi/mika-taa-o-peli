@@ -220,7 +220,9 @@
         </details>
         <p class="krediitti">${L("Kuvat: Wikimedia Commons, tekijät ja lisenssit tiedostossa CREDITS.md ja jokaisen kuvan jälkeen.", "Pictures: Wikimedia Commons; authors and licences in CREDITS.md and after each picture.")}</p>
       </div>
-      ${naytaAsennus() ? `<button class="nappi haamu mt-4" data-go="asenna">📲 ${L("Asenna puhelimeen", "Install on your phone")}<small>${L("Kotivalikkoon, aukeaa koko ruudulle", "To your home screen, opens in full screen")}</small></button>` : ""}`);
+      ${naytaAsennus() ? `<button class="nappi haamu mt-4" data-go="asenna">📲 ${L("Asenna puhelimeen", "Install on your phone")}<small>${L("Kotivalikkoon, aukeaa koko ruudulle", "To your home screen, opens in full screen")}</small></button>`
+        // itchin kehyksessä asennus ei onnistu: linkki (target _top, ei window.open, iPhone estää sen) pelin omalle sivulle
+        : kehyksessa && kosketus ? `<a class="nappi haamu mt-4 no-underline" href="${PAGES}" target="_top">📲 ${L("Asenna puhelimeen", "Install on your phone")}<small>${L("Avaa pelin oman sivun, asennus onnistuu siellä", "Opens the game's own page, where you can install it")}</small></a>` : ""}`);
     app.querySelectorAll("[data-go]").forEach(b => b.onclick = () => ({
       liiga: aloitaLiiga, paiva: () => tanaan ? paivaLoppu(tanaan) : aloitaPaiva(), kaveri: kaveri, tulos: () => tulostaulut("liiga"),
       nimi: () => kysyNimi(koti), aani: () => { kirjoita("aani", !lue("aani", true)); koti(); }, asenna
