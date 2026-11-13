@@ -18,7 +18,7 @@ const PELI = (() => {
     LEVEYS: 6, RUUDUT: 36,
     // Ruutu maksaa osuuden jäljellä olevasta potista (Mikko 2026-10-27: kiinteät hinnat veivät potin nollaan): 1. ruutu 3,5 %,
     // 2. 4,5 %, 3. 5,5 % ja +1 % joka avauksella (pienempi ruutu paljastaa vähemmän, joten se maksaa vähemmän; 5×5:ssä 5 % + 1,5 %),
-    // kerrottuna sijainnilla (kulma 0,6, reuna 1, keskusta = kaikki reunarenkaan sisällä 1,5) ja Tiedän!-painalluksen
+    // kerrottuna sijainnilla (kulma 0,6, muut 1, keskimmäiset 2×2 1,5) ja Tiedän!-painalluksen
     // jälkeen kahdella, enintään 60 %.
     OSUUS_ALKU: 0.035, OSUUS_ASKEL: 0.01, OSUUS_MAX: 0.6,
     PAIKKA: { kulma: 0.6, reuna: 1, keski: 1.5 },
@@ -107,7 +107,11 @@ const PELI = (() => {
   // Ruudun hinta: osuus potista; monesko avattava ruutu (kiihtyy) × sijainti (kulmat halvimpia, keskusta kallein) × Tiedän!-kerroin
   function paikka(r) {
     const L = S.LEVEYS, x = r % L, y = Math.floor(r / L), reunaX = x === 0 || x === L - 1, reunaY = y === 0 || y === L - 1;
-    return reunaX && reunaY ? "kulma" : reunaX || reunaY ? "reuna" : "keski";
+    if (reunaX && reunaY) return "kulma";
+    // Keskusta = keskimmäiset 2×2 (parillinen leveys) tai 3×3 (pariton). Mikko 2026-11-13: 6×6:n sisin 4×4 oli 16 kalleinta
+    // ruutua, eikä keskusta enää erottunut. Muut ruudut (reunat ja välikehä) ovat perushintaisia.
+    const k = L % 2 === 0 ? [L / 2 - 1, L / 2] : [(L - 3) / 2, (L - 1) / 2, (L + 1) / 2];
+    return k.includes(x) && k.includes(y) ? "keski" : "reuna";
   }
   function perusosuus(monesko) { return S.OSUUS_ALKU + S.OSUUS_ASKEL * monesko; }
   function osuus(t, r) {
