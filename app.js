@@ -147,7 +147,7 @@
         <div class="flex items-center justify-between"><span>Pelaaja: <b>${esc(nimi())}</b></span><button class="siru" data-go="nimi">Vaihda</button></div>
         <div class="flex items-center justify-between"><span>Äänet</span><button class="siru" data-go="aani">${lue("aani", true) ? "Päällä 🔊" : "Pois 🔇"}</button></div>
         <details class="text-slate-400"><summary class="cursor-pointer">Säännöt</summary>
-          <p class="mt-2">Kuva on piilossa ${S.RUUDUT} ruudun alla. Potti alkaa ${luku(S.POTTI)} pisteestä ja alkaa sulaa heti, niin että se on tyhjä, kun ${S.AIKA} sekuntia on kulunut. Nopea arvaus palkitaan. Ruutu maksaa osuuden jäljellä olevasta potista: ensimmäinen ${pros(S.OSUUS_ALKU)} %, toinen ${pros(S.OSUUS_ALKU + S.OSUUS_ASKEL)} %, kolmas ${pros(S.OSUUS_ALKU + 2 * S.OSUUS_ASKEL)} % ja aina ${pros(S.OSUUS_ASKEL)} % enemmän. Kulmaruutu maksaa 0,6-kertaisesti ja keskiruutu 1,5-kertaisesti. Pottia jää aina jotain, vaikka avaisit paljon; vain aika vie sen nollaan. Ruudussa näkyy hinta pisteinä juuri nyt.</p>
+          <p class="mt-2">Kuva on piilossa ${S.RUUDUT} ruudun alla. Potti alkaa ${luku(S.POTTI)} pisteestä ja alkaa sulaa heti, niin että se on tyhjä, kun ${S.AIKA} sekuntia on kulunut. Nopea arvaus palkitaan. Ruutu maksaa osuuden jäljellä olevasta potista: ensimmäinen ${pros(S.OSUUS_ALKU)} %, toinen ${pros(S.OSUUS_ALKU + S.OSUUS_ASKEL)} %, kolmas ${pros(S.OSUUS_ALKU + 2 * S.OSUUS_ASKEL)} % ja aina ${pros(S.OSUUS_ASKEL)} % enemmän. Reunaruudut ovat halpoja (${kerroinTxt(S.PAIKKA.reuna).slice(1)}-kertaisesti, kulmat ${kerroinTxt(S.PAIKKA.kulma).slice(1)}-kertaisesti) ja keskiruudut kalliita (${kerroinTxt(S.PAIKKA.keski).slice(1)}-kertaisesti). Pottia jää aina jotain, vaikka avaisit paljon; vain aika vie sen nollaan. Ruudussa näkyy hinta pisteinä juuri nyt.</p>
           <p class="mt-2">Vaikeus nousee ottelun aikana: ensin koko kuvia, sitten lähikuvia (potti ${luku(S.TASOT[2].potti)}) ja lopuksi tiukkoja lähikuvia (potti ${luku(S.TASOT[3].potti)}). Koko kuva näytetään vastauksen jälkeen.</p>
           <p class="mt-2">Kun luulet tietäväsi, paina <b>Tiedän!</b> Näet neljä samannäköistä vaihtoehtoa, ja sinulla on ${S.VASTAUSAIKA} s (tai vähemmän, jos kokonaisaikaa on vähemmän jäljellä) ja yksi vastaus. Väärä vastaus on nolla pistettä. Lisäruutu maksaa nyt kaksinkertaisesti.</p>
           <p class="mt-2">Näppäimistöllä: Enter tai välilyönti on Tiedän! ja jatka, A–D valitsee.</p>
@@ -330,7 +330,6 @@
     kuva();
   }
 
-  const TASO_OTSIKKO = [, "Koko kuva", "Lähikuva", "Tiukka lähikuva"];
   // Ottelun eteneminen palloina: vihreä oikein, punainen väärin tai aika loppui, harmaa ohitettu, keltainen nykyinen
   function pallot() {
     return `<div class="pallot" id="pallot" role="img" aria-label="Kuva ${t.i + 1}/${t.kierrokset.length}">` + t.kierrokset.map((_, i) => {
@@ -358,7 +357,7 @@
     paikka.classList.toggle("ohi", ohi);
   }
 
-  const TASO_NIMI = [, "Koko kuva", "Lähikuva " + kerroinTxt(S.TASOT[2].zoom) + " · potti " + luku(S.TASOT[2].potti), "Tiukka lähikuva " + kerroinTxt(S.TASOT[3].zoom) + " · potti " + luku(S.TASOT[3].potti)];
+  // Tason nimeä (lähikuva / tiukka lähikuva) ei näytetä pelin aikana (Mikko 2026-11-13: se on vihje). Vain isompi potti kerrotaan.
   // Lähikuva: kuva suurennetaan ja siirretään niin, että näkyvän alueen keskipiste on (kx, ky)
   function lahikuvaTyyli(kr) {
     if (kr.zoom <= 1) return "";
@@ -392,10 +391,10 @@
         <img id="img" alt="Arvattava kuva" draggable="false" style="${lahikuvaTyyli(kr)}">
         <div class="ruudukko" id="ruudukko" style="--l:${S.LEVEYS}">${t.k.auki.map((a, i) => `<button class="ruutu paikka-${P.paikka(i)}" style="--n:${i}" data-r="${i}"><span class="hinta"></span></button>`).join("")}</div>
         <div class="alkuruutu" id="alkuruutu" aria-hidden="true"><div class="nro">Kuva ${t.i + 1}/${t.kierrokset.length}</div>
-          ${tasoVaihtui ? `<div class="tasoteksti taso-${kr.taso}">${TASO_OTSIKKO[kr.taso]}</div><div class="tasopotti">potti ${luku(kr.potti)}</div>` : ""}</div>
+          ${tasoVaihtui && t.i > 0 ? `<div class="tasoteksti">Isompi potti</div><div class="tasopotti">${luku(kr.potti)}</div>` : ""}</div>
       </div>
       <div id="peliala">
-      <div class="my-2 flex items-center justify-between text-sm text-slate-400"><span class="taso taso-${kr.taso}${tasoVaihtui && t.i > 0 ? " taso-ilmoitus" : ""}" id="taso">${TASO_NIMI[kr.taso]}</span><span id="sulaa"></span></div>
+      <div class="my-2 flex items-center justify-between text-sm text-slate-400"><span></span><span id="sulaa"></span></div>
       <div id="ala">
         <button class="nappi paa" id="tiedan">Tiedän! <small>näytä vaihtoehdot · ${S.VASTAUSAIKA} s aikaa · yksi vastaus</small></button>
       </div>

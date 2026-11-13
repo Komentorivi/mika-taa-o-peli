@@ -50,8 +50,9 @@ button.siru:active { transform: scale(.95); }
 /* Ruudussa näkyy vain hinta, isona (viimeistely 2026-11-13: numerot 1–16 eivät merkinneet mitään ja peittivät hinnan).
    Väri kertoo kalleuden: kulma vaalea, reuna valkoinen, keskusta pinkki, Tiedän!-painalluksen jälkeen kaikki pinkkejä. */
 .ruutu .hinta { font: 400 clamp(.75rem, 3.6vw, 1.1rem) "Bungee", sans-serif; font-variant-numeric: tabular-nums; color: #fff; pointer-events: none; }
-.ruutu.paikka-kulma .hinta { color: #b9c6ff; }
-.ruutu.paikka-kulma { background: linear-gradient(145deg, #23234a, #17172f); }
+/* Reunakehä on halpa (Mikko 2026-11-13): vaalea sininen hinta ja tummempi pohja, ettei se näytä samalta kuin kallis keskusta */
+.ruutu.paikka-kulma .hinta, .ruutu.paikka-reuna .hinta { color: #b9c6ff; }
+.ruutu.paikka-kulma, .ruutu.paikka-reuna { background: linear-gradient(145deg, #23234a, #17172f); }
 .ruutu.paikka-keski { background: linear-gradient(145deg, #4a2560, #2c1a45); }
 .ruutu.paikka-keski .hinta { color: var(--pink); text-shadow: 0 0 10px rgba(255, 61, 139, .45); }
 .kallis .ruutu { background: linear-gradient(145deg, #5a1f3a, #321628); }
@@ -193,8 +194,7 @@ html, body { height: 100%; overflow: hidden; }
 .alkuruutu { position: absolute; inset: 0; z-index: 4; display: grid; place-content: center; gap: 6px; text-align: center; background: rgba(11, 11, 26, .82); cursor: pointer; animation: hayty .2s ease-out; }
 .alkuruutu.pois { opacity: 0; transition: opacity .2s; pointer-events: none; }
 .alkuruutu .nro { font: 400 clamp(2rem, 11vw, 3.2rem) "Bungee", sans-serif; color: #fff; animation: leima .35s ease-out; }
-.alkuruutu .tasoteksti { font: 400 clamp(1.1rem, 6vw, 1.6rem) "Bungee", sans-serif; }
-.alkuruutu .tasoteksti.taso-1 { color: var(--yellow); }
+.alkuruutu .tasoteksti { font: 400 clamp(1.1rem, 6vw, 1.6rem) "Bungee", sans-serif; color: var(--cyan); }
 .alkuruutu .tasopotti { font-weight: 800; font-size: 1.1rem; color: var(--yellow); }
 .taso-ilmoitus { display: inline-block; animation: tasonousu .6s ease-out; }
 @keyframes tasonousu { 0% { transform: scale(.6); opacity: 0; } 60% { transform: scale(1.12); } }
