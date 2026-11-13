@@ -17,6 +17,7 @@
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   const luku = n => Math.round(n).toLocaleString("fi-FI");
   const kerroinTxt = k => "×" + String(k).replace(".", ",");
+  const pros = x => String(Math.round(x * 1000) / 10).replace(".", ",");
 
   // Näkymän vaihto pehmeästi: valikot liukuvat sisään, pelinäkymä häivyttyy ("hayty"), ettei kuvan mitoitus heilu
   function nayta(html, tapa) {
@@ -146,7 +147,7 @@
         <div class="flex items-center justify-between"><span>Pelaaja: <b>${esc(nimi())}</b></span><button class="siru" data-go="nimi">Vaihda</button></div>
         <div class="flex items-center justify-between"><span>Äänet</span><button class="siru" data-go="aani">${lue("aani", true) ? "Päällä 🔊" : "Pois 🔇"}</button></div>
         <details class="text-slate-400"><summary class="cursor-pointer">Säännöt</summary>
-          <p class="mt-2">Kuva on piilossa ${S.RUUDUT} ruudun alla. Potti alkaa ${luku(S.POTTI)} pisteestä ja sulaa kiihtyvästi niin, että se on tyhjä, kun ${S.AIKA} sekuntia on kulunut. Katso rauhassa, mutta älä jää jahkailemaan. Ruutu maksaa osuuden jäljellä olevasta potista: ensimmäinen 8 %, toinen 10 %, kolmas 12 % ja aina 2 % enemmän. Kulmaruutu maksaa 0,6-kertaisesti ja keskiruutu 1,5-kertaisesti. Pottia jää aina jotain, vaikka avaisit paljon; vain aika vie sen nollaan. Ruudussa näkyy hinta pisteinä juuri nyt.</p>
+          <p class="mt-2">Kuva on piilossa ${S.RUUDUT} ruudun alla. Potti alkaa ${luku(S.POTTI)} pisteestä ja alkaa sulaa heti, niin että se on tyhjä, kun ${S.AIKA} sekuntia on kulunut. Nopea arvaus palkitaan. Ruutu maksaa osuuden jäljellä olevasta potista: ensimmäinen ${pros(S.OSUUS_ALKU)} %, toinen ${pros(S.OSUUS_ALKU + S.OSUUS_ASKEL)} %, kolmas ${pros(S.OSUUS_ALKU + 2 * S.OSUUS_ASKEL)} % ja aina ${pros(S.OSUUS_ASKEL)} % enemmän. Kulmaruutu maksaa 0,6-kertaisesti ja keskiruutu 1,5-kertaisesti. Pottia jää aina jotain, vaikka avaisit paljon; vain aika vie sen nollaan. Ruudussa näkyy hinta pisteinä juuri nyt.</p>
           <p class="mt-2">Vaikeus nousee ottelun aikana: ensin koko kuvia, sitten lähikuvia (potti ${luku(S.TASOT[2].potti)}) ja lopuksi tiukkoja lähikuvia (potti ${luku(S.TASOT[3].potti)}). Koko kuva näytetään vastauksen jälkeen.</p>
           <p class="mt-2">Kun luulet tietäväsi, paina <b>Tiedän!</b> Näet neljä samannäköistä vaihtoehtoa, ja sinulla on ${S.VASTAUSAIKA} s (tai vähemmän, jos kokonaisaikaa on vähemmän jäljellä) ja yksi vastaus. Väärä vastaus on nolla pistettä. Lisäruutu maksaa nyt kaksinkertaisesti.</p>
           <p class="mt-2">Näppäimistöllä: Enter tai välilyönti on Tiedän! ja jatka, A–D valitsee.</p>

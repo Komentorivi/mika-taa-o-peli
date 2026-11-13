@@ -8,18 +8,20 @@ const PELI = (() => {
     // Zoom 1,5 / 2 meni eläimissä liian lähelle (pelkkää turkkia), joten 1,25 / 1,5.
     TASOT: [null, { zoom: 1, potti: 1000 }, { zoom: 1.25, potti: 1250 }, { zoom: 1.5, potti: 1500 }],
     SIIRTO: 0.4,        // lähikuvan keskipiste siirtyy sivuun enintään tämän osuuden sallitusta
-    // Potti sulaa kiihtyvästi ja on tyhjä täsmälleen, kun kokonaisaika loppuu (Mikko 2026-10-27: pisteet olivat nollassa
-    // ennen kiireen tuntua). Sulanut osuus = A·x + B·x², x = kulunut osa kokonaisajasta (10 s: 19 %, 20 s: 52 %, 30 s: 100 %).
-    SULAA_A: 0.35, SULAA_B: 0.65,
-    AIKA: 30,           // kokonaisaika sekunteina; "Tiedän!" ei pidennä sitä
-    RUUDUT: 16,         // 4×4, kaikki kiinni alussa
-    // Ruutu maksaa osuuden jäljellä olevasta potista (Mikko 2026-10-27: kiinteät hinnat veivät potin nollaan): 1. ruutu 8 %,
-    // 2. 10 %, 3. 12 % ja +2 % joka avauksella, kerrottuna sijainnilla (kulma 0,6, reuna 1, keskusta 1,5) ja "Tiedän!"-
-    // painalluksen jälkeen kahdella, enintään 60 %. Pottia jää aina jotain; vain aika vie sen nollaan.
-    OSUUS_ALKU: 0.08, OSUUS_ASKEL: 0.02, OSUUS_MAX: 0.6,
+    // Potti sulaa ja on tyhjä täsmälleen, kun kokonaisaika loppuu. Sulanut osuus = A·x + B·x², x = kulunut osa kokonaisajasta.
+    // Mikko 2026-11-13: 30 s oli liian pitkä (kuvat ratkaistaan paljon nopeammin) ja alku liian lepsu, joten 20 s ja
+    // sulaminen nopeaa heti alusta: 5 s: 17,5 %, 10 s: 40 %, 15 s: 67,5 %, 20 s: 100 % (ennen 10 s: 19 %).
+    SULAA_A: 0.6, SULAA_B: 0.4,
+    AIKA: 20,           // kokonaisaika sekunteina; "Tiedän!" ei pidennä sitä
+    // Mikko 2026-11-13: 4×4 oli liian vähän, yksi ruutu paljasti liikaa (6,25 % kuvasta) → 5×5 (4 % kuvasta)
+    LEVEYS: 5, RUUDUT: 25,
+    // Ruutu maksaa osuuden jäljellä olevasta potista (Mikko 2026-10-27: kiinteät hinnat veivät potin nollaan): 1. ruutu 5 %,
+    // 2. 6,5 %, 3. 8 % ja +1,5 % joka avauksella (5×5:ssä ruutu paljastaa vähemmän, joten se maksaa vähemmän), kerrottuna
+    // sijainnilla (kulma 0,6, reuna 1, keskusta = sisin 3×3 1,5) ja "Tiedän!"-painalluksen jälkeen kahdella, enintään 60 %.
+    OSUUS_ALKU: 0.05, OSUUS_ASKEL: 0.015, OSUUS_MAX: 0.6,
     PAIKKA: { kulma: 0.6, reuna: 1, keski: 1.5 },
     JALKEEN: 2,
-    VASTAUSAIKA: 10,    // enintään näin monta sekuntia vastata "Tiedän!"-painalluksen jälkeen (tai vähemmän, jos kokonaisaika loppuu)
+    VASTAUSAIKA: 8,     // enintään näin monta sekuntia vastata "Tiedän!"-painalluksen jälkeen (tai vähemmän, jos kokonaisaika loppuu)
     LIIGA_KUVIA: 10, PAIVA_KUVIA: 5
   };
 
@@ -102,7 +104,7 @@ const PELI = (() => {
 
   // Ruudun hinta: osuus potista; monesko avattava ruutu (kiihtyy) × sijainti (kulmat halvimpia, keskusta kallein) × Tiedän!-kerroin
   function paikka(r) {
-    const x = r % 4, y = Math.floor(r / 4), reunaX = x === 0 || x === 3, reunaY = y === 0 || y === 3;
+    const L = S.LEVEYS, x = r % L, y = Math.floor(r / L), reunaX = x === 0 || x === L - 1, reunaY = y === 0 || y === L - 1;
     return reunaX && reunaY ? "kulma" : reunaX || reunaY ? "reuna" : "keski";
   }
   function perusosuus(monesko) { return S.OSUUS_ALKU + S.OSUUS_ASKEL * monesko; }
@@ -213,7 +215,8 @@ const PELI = (() => {
   ];
   // Viikkoliiga on viikon paras ottelu (Mikko 2026-10-27: yhteenlasketut 20 000–40 000 olivat epätodellisia; hyvä ottelu on
   // 6 000–8 000). Haamun paras tulos paranee viikon mittaan, kun se "pelaa" lisää; viikon lopussa noin 1 900–8 500.
-  const HAAMU_PERUS = 4250;
+  // 2026-11-13: 20 s:n aika ja nopeampi sulaminen laskevat tuloksia noin 15–20 %, joten haamut 4 250 → 3 500
+  const HAAMU_PERUS = 3500;
   function haamut(vk, osuus) {
     return HAAMUT.map(([nimi, taso]) => {
       const r = rng("haamu:" + vk + ":" + nimi);
