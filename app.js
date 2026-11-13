@@ -150,6 +150,44 @@
   };
   const varise = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
 
+  // ---------- Asenna puhelimeen (2026-11-13, kuten Mökkiristikossa) ----------
+  // Android ja tietokoneen Chrome/Edge tarjoavat asennusikkunan (beforeinstallprompt). iPhone ei salli sivun asentaa itseään,
+  // joten siellä näytetään ohje Jaa → Lisää Koti-valikkoon. Nappi piilossa itchin kehyksessä ja kun peli on jo asennettu.
+  let asennusKehote = null;
+  const kehyksessa = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
+  const iOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const asennettu = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  const kosketus = matchMedia("(pointer: coarse)").matches;
+  const naytaAsennus = () => !kehyksessa && !asennettu() && !!(asennusKehote || kosketus);
+  const kotona = () => !!document.querySelector('[data-go="liiga"]');
+  window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); asennusKehote = e; if (kotona()) koti(); });
+  window.addEventListener("appinstalled", () => { asennusKehote = null; toast(L("Peli asennettu", "Game installed")); if (kotona()) koti(); });
+  async function asenna() {
+    if (asennusKehote) {
+      const e = asennusKehote; asennusKehote = null;
+      e.prompt();
+      try { await e.userChoice; } catch (err) {}
+      return koti();
+    }
+    const jaa = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-4px" aria-hidden="true"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>';
+    const askeleet = iOS
+      ? [L(`Paina Jaa-painiketta ${jaa} (Safarissa alareunassa, Chromessa osoiterivin oikeassa reunassa).`, `Tap the Share button ${jaa} (at the bottom in Safari, on the right of the address bar in Chrome).`),
+         L("Vieritä valikkoa alas ja valitse <b>Lisää Koti-valikkoon</b>.", "Scroll down and choose <b>Add to Home Screen</b>."),
+         L("Paina oikeasta yläkulmasta <b>Lisää</b>.", "Tap <b>Add</b> in the top right corner.")]
+      : [L("Avaa selaimen valikko (⋮ oikeassa yläkulmassa).", "Open the browser menu (⋮ in the top right corner)."),
+         L("Valitse <b>Asenna sovellus</b> tai <b>Lisää aloitusnäyttöön</b>.", "Choose <b>Install app</b> or <b>Add to Home screen</b>."),
+         L("Vahvista painamalla <b>Asenna</b>.", "Confirm with <b>Install</b>.")];
+    nayta(`
+      ${ylapalkki(L("Asenna puhelimeen", "Install on your phone"))}
+      <div class="paneeli grid gap-3 p-4">
+        <p>${L("Peli aukeaa kotivalikosta koko ruudulle kuin oma sovellus.", "The game opens from your home screen in full screen, like an app.")}</p>
+        <ol class="grid list-decimal gap-3 pl-5">${askeleet.map(t => `<li>${t}</li>`).join("")}</ol>
+      </div>
+      <button class="nappi haamu mt-4" id="selva">${L("Selvä", "Got it")}</button>`);
+    kotiNappi();
+    document.getElementById("selva").onclick = koti;
+  }
+
   // ---------- Ruudut ----------
   function nimi() { return lue("nimi", ""); }
 
@@ -181,10 +219,11 @@
           <p class="mt-2">Näppäimistöllä: Enter tai välilyönti on Tiedän! ja jatka, A–D valitsee.</p>`}
         </details>
         <p class="krediitti">${L("Kuvat: Wikimedia Commons, tekijät ja lisenssit tiedostossa CREDITS.md ja jokaisen kuvan jälkeen.", "Pictures: Wikimedia Commons; authors and licences in CREDITS.md and after each picture.")}</p>
-      </div>`);
+      </div>
+      ${naytaAsennus() ? `<button class="nappi haamu mt-4" data-go="asenna">📲 ${L("Asenna puhelimeen", "Install on your phone")}<small>${L("Kotivalikkoon, aukeaa koko ruudulle", "To your home screen, opens in full screen")}</small></button>` : ""}`);
     app.querySelectorAll("[data-go]").forEach(b => b.onclick = () => ({
       liiga: aloitaLiiga, paiva: () => tanaan ? paivaLoppu(tanaan) : aloitaPaiva(), kaveri: kaveri, tulos: () => tulostaulut("liiga"),
-      nimi: () => kysyNimi(koti), aani: () => { kirjoita("aani", !lue("aani", true)); koti(); }
+      nimi: () => kysyNimi(koti), aani: () => { kirjoita("aani", !lue("aani", true)); koti(); }, asenna
     })[b.dataset.go]());
   }
 
@@ -750,6 +789,8 @@
   const PAGES = L("https://komentorivi.github.io/mika-taa-o-peli/", "https://komentorivi.github.io/mika-taa-o-peli/en/");
   const omaPalvelin = () => /^https?:/.test(location.protocol) && !/(itch\.zone|itch\.io|hwcdn\.net)$/.test(location.hostname);
   function osoite() { return omaPalvelin() ? location.origin + location.pathname : PELIN_SIVU; }
+  // Taustapalvelu vain omalla palvelimella (GitHub Pages), ei itchissä eikä paikallisesta tiedostosta
+  if ("serviceWorker" in navigator && omaPalvelin() && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
 
   function loppu() {
     AANI.loppu();
