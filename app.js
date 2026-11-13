@@ -656,7 +656,7 @@
       kohde.classList.add("nousee");
       const askel = nyt => {
         if (!kohde.isConnected) return;
-        const x = Math.min(1, (nyt - t0) / kesto), e = 1 - Math.pow(1 - x, 3);
+        const x = Math.min(1, Math.max(0, (nyt - t0) / kesto)), e = 1 - Math.pow(1 - x, 3);   // rajaus: rAF-aikaleima voi poiketa kellosta
         kohde.textContent = luku(alku + (loppu - alku) * e);
         if (x < 1) requestAnimationFrame(askel);
         else { setTimeout(() => kohde.classList.remove("nousee"), 300); paivitaVertailu(); }
