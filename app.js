@@ -18,6 +18,14 @@
   const luku = n => Math.round(n).toLocaleString("fi-FI");
   const kerroinTxt = k => "×" + String(k).replace(".", ",");
 
+  // Näkymän vaihto pehmeästi: valikot liukuvat sisään, pelinäkymä häivyttyy ("hayty"), ettei kuvan mitoitus heilu
+  function nayta(html, tapa) {
+    app.innerHTML = html;
+    app.classList.remove("sisaan", "hayty");
+    void app.offsetWidth;
+    app.classList.add(tapa || "sisaan");
+  }
+
   function toast(t) {
     const el = document.getElementById("toast");
     el.textContent = t; el.hidden = false;
@@ -123,7 +131,7 @@
     if (!nimi()) return kysyNimi(koti);
     const nyt = new Date(), vk = P.viikko(nyt), liiga = liigaNyt(), paiva = lue("paiva", {}), tanaan = paiva[P.pvm(nyt)];
     const putki = P.putkiPaivina(paiva, nyt), sija = liigaTaulu().findIndex(r => r.mina) + 1;
-    app.innerHTML = `
+    nayta(`
       <header class="mb-5 mt-4 text-center">
         <h1 class="logo text-5xl">Mikä<br><b>tää o?</b></h1>
         <p class="mt-3 text-sm text-slate-400">Avaa ruutuja, arvaa kuva. Mitä vähemmän näet, sitä enemmän saat.</p>
@@ -144,7 +152,7 @@
           <p class="mt-2">Näppäimistöllä: Enter tai välilyönti on Tiedän! ja jatka, A–D valitsee.</p>
         </details>
         <p class="krediitti">Kuvat: Wikimedia Commons, tekijät ja lisenssit tiedostossa CREDITS.md ja jokaisen kuvan jälkeen.</p>
-      </div>`;
+      </div>`);
     app.querySelectorAll("[data-go]").forEach(b => b.onclick = () => ({
       liiga: aloitaLiiga, paiva: () => tanaan ? paivaLoppu(tanaan) : aloitaPaiva(), kaveri: kaveri, tulos: () => tulostaulut("liiga"),
       nimi: () => kysyNimi(koti), aani: () => { kirjoita("aani", !lue("aani", true)); koti(); }
@@ -153,13 +161,13 @@
 
   function kysyNimi(jatko) {
     pysayta();
-    app.innerHTML = `
+    nayta(`
       <header class="mb-6 mt-8 text-center"><h1 class="logo text-4xl">Mikä <b>tää o?</b></h1></header>
       <form class="paneeli grid gap-3 p-5" id="f">
         <label for="n" class="font-semibold">Mikä sun nimi on?</label>
         <input id="n" class="syote" maxlength="20" autocomplete="nickname" value="${esc(nimi())}" placeholder="esim. Mikko">
         <button class="nappi paa">Valmis</button>
-      </form>`;
+      </form>`);
     const inp = document.getElementById("n");
     setTimeout(() => inp.focus(), 50);
     document.getElementById("f").onsubmit = e => {
@@ -200,7 +208,7 @@
     let n = 10;
     const omat = lue("haasteet", {});
     const vanhat = Object.entries(omat).sort((a, b) => (b[1].aika || 0) - (a[1].aika || 0)).slice(0, 10);
-    app.innerHTML = `
+    nayta(`
       ${ylapalkki("Kaverihaaste")}
       <section class="paneeli grid gap-3 p-4">
         <h2 class="text-lg font-extrabold">Luo uusi haaste</h2>
@@ -216,7 +224,7 @@
         <button class="nappi syaani">Pelaa haaste</button>
       </form>
       ${vanhat.length ? `<section class="paneeli mt-3 grid gap-2 p-4"><h2 class="font-extrabold">Omat haasteet</h2><p class="text-xs text-slate-400">Avaa haaste nähdäksesi, miten kaverit pärjäsivät.</p>${vanhat.map(([k, h]) =>
-        `<button class="nappi" data-k="${esc(k)}">${esc(k)}<small>${Object.keys(h.tulokset || {}).length} pelaajaa${h.oma != null ? " · sinä " + luku(h.oma) + " p" : ""}</small></button>`).join("")}</section>` : ""}`;
+        `<button class="nappi" data-k="${esc(k)}">${esc(k)}<small>${Object.keys(h.tulokset || {}).length} pelaajaa${h.oma != null ? " · sinä " + luku(h.oma) + " p" : ""}</small></button>`).join("")}</section>` : ""}`);
     kotiNappi();
     app.querySelectorAll("[data-n]").forEach(b => b.onclick = () => {
       n = Number(b.dataset.n);
@@ -253,9 +261,16 @@
   }
 
   // ---------- Peli ----------
+  // kuvaValmis = kello käy (kuva ladattu JA alkuruutu ohi). rafId = näytön piirtosilmukka (potti ja aikapalkki sulavasti).
   let t = null, meta = null, ajastin = 0, viimeksi = 0, kuvaValmis = false, seuraavaTikki = 0;
+  let kuvaLadattu = false, introValmis = false, introAjastin = 0, rafId = 0, rafEdellinen = 0, nayttoPotti = 0, hoverRuutu = -1;
   const el = {};
-  function pysayta() { clearInterval(ajastin); ajastin = 0; t = null; document.onkeydown = null; suljeTieto(); app.scrollTop = 0; }
+  function pysayta() {
+    clearInterval(ajastin); ajastin = 0; clearTimeout(introAjastin); introAjastin = 0;
+    cancelAnimationFrame(rafId); rafId = 0; t = null; hoverRuutu = -1;
+    document.onkeydown = null; suljeTieto(); app.scrollTop = 0;
+    document.querySelectorAll(".lentava").forEach(x => x.remove());
+  }
 
   function ylapalkki(otsikko, oikea) {
     return `<div class="mb-3 flex items-center justify-between gap-2">
@@ -314,6 +329,34 @@
     kuva();
   }
 
+  const TASO_OTSIKKO = [, "Koko kuva", "Lähikuva", "Tiukka lähikuva"];
+  // Ottelun eteneminen palloina: vihreä oikein, punainen väärin tai aika loppui, harmaa ohitettu, keltainen nykyinen
+  function pallot() {
+    return `<div class="pallot" id="pallot" role="img" aria-label="Kuva ${t.i + 1}/${t.kierrokset.length}">` + t.kierrokset.map((_, i) => {
+      const r = t.tulokset[i];
+      return `<i class="${r ? (r.oikein ? "ok" : r.ohitettu ? "ohi" : "ei") : i === t.i ? "nyt" : ""}"></i>`;
+    }).join("") + `</div>`;
+  }
+  // Vertailukohta pisteille: viikkoliigassa viikon ennätys, kaverihaasteessa paras kaveri, päivän haasteessa eilinen tulos
+  function vertailu() {
+    if (meta.tyyppi === "liiga") { const l = liigaNyt(); return l.paras > 0 ? { nimi: "Ennätys", p: l.paras, ohi: "Uusi ennätys!" } : null; }
+    if (meta.tyyppi === "haaste") {
+      const rr = Object.entries(haaste(meta.h.koodi).tulokset).filter(([n]) => n !== nimi()).sort((a, b) => b[1] - a[1]);
+      return rr.length ? { nimi: rr[0][0], p: rr[0][1], ohi: "Ohitit: " + rr[0][0] } : null;
+    }
+    const d = new Date(); d.setDate(d.getDate() - 1);
+    const e = lue("paiva", {})[P.pvm(d)];
+    return e ? { nimi: "Eilen", p: e.pisteet, ohi: "Eilinen ylitetty!" } : null;
+  }
+  function paivitaVertailu() {
+    const v = vertailu(), paikka = document.getElementById("vertailu");
+    if (!paikka) return;
+    if (!v) { paikka.textContent = ""; return; }
+    const ohi = t.pisteet > v.p;
+    paikka.textContent = ohi ? v.ohi : v.nimi + " " + luku(v.p);   // textContent: nimeä ei tulkita HTML:nä
+    paikka.classList.toggle("ohi", ohi);
+  }
+
   const TASO_NIMI = [, "Koko kuva", "Lähikuva " + kerroinTxt(S.TASOT[2].zoom) + " · potti " + luku(S.TASOT[2].potti), "Tiukka lähikuva " + kerroinTxt(S.TASOT[3].zoom) + " · potti " + luku(S.TASOT[3].potti)];
   // Lähikuva: kuva suurennetaan ja siirretään niin, että näkyvän alueen keskipiste on (kx, ky)
   function lahikuvaTyyli(kr) {
@@ -331,41 +374,66 @@
       const n = lue("nahdyt", []);
       if (!n.includes(kr.kuva.id)) { n.push(kr.kuva.id); kirjoita("nahdyt", n.slice(-Math.floor(KUVAT.length * 0.8))); }
     }
-    kuvaValmis = false; seuraavaTikki = 0;
-    app.innerHTML = `
-      ${ylapalkki(meta.otsikko, `<span class="siru">${t.i + 1}/${t.kierrokset.length}</span>`)}
+    kuvaValmis = false; kuvaLadattu = false; introValmis = false; seuraavaTikki = 0; hoverRuutu = -1; nayttoPotti = kr.potti;
+    clearTimeout(introAjastin);
+    // Tason nousu (lähikuva, isompi potti) ilmoitetaan alkuruudussa ja tasomerkissä, ei vain pienellä tekstillä
+    const tasoVaihtui = t.i === 0 || kr.taso !== t.kierrokset[t.i - 1].taso;
+    nayta(`
+      ${ylapalkki(meta.otsikko, pallot())}
       <div class="mb-2 flex items-end justify-between">
-        <div><div class="text-xs uppercase tracking-widest text-slate-400">Potti</div><div class="potti" id="potti">${luku(kr.potti)}</div></div>
+        <div><div class="text-xs uppercase tracking-widest text-slate-400">Potti</div>
+          <div class="pottirivi"><div class="potti" id="potti">${luku(kr.potti)}</div><span class="ennakko" id="ennakko" aria-hidden="true"></span></div></div>
         <div class="text-right"><div class="text-xs uppercase tracking-widest text-slate-400">Pisteet</div>
-          <b class="potti neon" style="font-size:1.6rem" id="pisteet">${luku(t.pisteet)}</b></div>
+          <b class="potti neon" style="font-size:1.6rem" id="pisteet">${luku(t.pisteet)}</b><div class="vertailu" id="vertailu"></div></div>
       </div>
       <div class="aikapalkki mb-3" id="aika"><i style="width:100%"></i></div>
       <div class="kuvalaatikko mx-auto" id="laatikko">
         <img id="img" alt="Arvattava kuva" draggable="false" style="${lahikuvaTyyli(kr)}">
-        <div class="ruudukko" id="ruudukko">${t.k.auki.map((a, i) => `<button class="ruutu paikka-${P.paikka(i)}" style="--n:${i}" data-r="${i}">${i + 1}</button>`).join("")}</div>
+        <div class="ruudukko" id="ruudukko">${t.k.auki.map((a, i) => `<button class="ruutu paikka-${P.paikka(i)}" style="--n:${i}" data-r="${i}"><span class="hinta"></span></button>`).join("")}</div>
+        <div class="alkuruutu" id="alkuruutu" aria-hidden="true"><div class="nro">Kuva ${t.i + 1}/${t.kierrokset.length}</div>
+          ${tasoVaihtui ? `<div class="tasoteksti taso-${kr.taso}">${TASO_OTSIKKO[kr.taso]}</div><div class="tasopotti">potti ${luku(kr.potti)}</div>` : ""}</div>
       </div>
       <div id="peliala">
-      <div class="my-2 flex items-center justify-between text-sm text-slate-400"><span class="taso taso-${kr.taso}" id="taso">${TASO_NIMI[kr.taso]}</span><span id="sulaa"></span></div>
+      <div class="my-2 flex items-center justify-between text-sm text-slate-400"><span class="taso taso-${kr.taso}${tasoVaihtui && t.i > 0 ? " taso-ilmoitus" : ""}" id="taso">${TASO_NIMI[kr.taso]}</span><span id="sulaa"></span></div>
       <div id="ala">
         <button class="nappi paa" id="tiedan">Tiedän! <small>näytä vaihtoehdot · ${S.VASTAUSAIKA} s aikaa · yksi vastaus</small></button>
       </div>
-      </div>`;
+      </div>`, "hayty");
     kotiNappi(true);
     tallennaKesken(true);
-    ["potti", "pisteet", "aika", "laatikko", "ruudukko", "ala", "sulaa", "img"].forEach(k => el[k] = document.getElementById(k));
+    ["potti", "pisteet", "aika", "laatikko", "ruudukko", "ala", "sulaa", "img", "ennakko"].forEach(k => el[k] = document.getElementById(k));
+    paivitaVertailu();
     // Tailwind luo tyylit hetken viiveellä, joten mitoitus myös seuraavalla piirtokerralla ja kuvan latauduttua
     sovita(); requestAnimationFrame(sovita); setTimeout(sovita, 150);
-    el.img.onload = () => { kuvaValmis = true; viimeksi = performance.now(); sovita(); };
-    el.img.onerror = () => { kuvaValmis = true; viimeksi = performance.now(); toast("Kuva ei latautunut"); };
+    // Alkuruutu: lyhyt, tason vaihtuessa pidempi. Napautus tai Enter ohittaa. Kello lähtee vasta, kun kuva on ladattu ja ruutu ohi.
+    document.getElementById("alkuruutu").onclick = ohitaIntro;
+    introAjastin = setTimeout(ohitaIntro, tasoVaihtui ? 1300 : 700);
+    el.img.onload = () => { kuvaLadattu = true; sovita(); aloitaKello(); };
+    // Kuva ei lataudu: yksi uusi yritys, sitten kuva ohitetaan (ei pistettä, mutta kello ei syö aikaa tyhjän ruudun edessä)
+    let yritys = 0;
+    el.img.onerror = () => {
+      if (!t || !t.k || t.kierrokset[t.i] !== kr || t.k.valmis) return;
+      if (++yritys === 1) { el.img.src = "kuvat/" + kr.kuva.id + ".webp?uusi=" + Date.now(); return; }
+      if (P.ohita(t)) { kuvaLadattu = true; toast("Kuva ei latautunut, se ohitetaan."); paljasta(); }
+    };
     el.img.src = "kuvat/" + kr.kuva.id + ".webp";
     paivitaHinnat();
     // Esilataa seuraava
     const seur = t.kierrokset[t.i + 1];
     if (seur) { const i = new Image(); i.src = "kuvat/" + seur.kuva.id + ".webp"; }
-    el.ruudukko.querySelectorAll("[data-r]").forEach(b => b.onclick = () => avaaRuutu(Number(b.dataset.r)));
+    el.ruudukko.querySelectorAll("[data-r]").forEach(b => {
+      const r = Number(b.dataset.r);
+      b.onclick = () => avaaRuutu(r);
+      // Hiirellä ruudun päällä potin vieressä näkyy, paljonko pottia jää, jos ruudun avaa
+      b.onpointerenter = e => { if (e.pointerType === "mouse") { hoverRuutu = r; paivitaEnnakko(); } };
+      b.onpointerleave = () => { if (hoverRuutu === r) { hoverRuutu = -1; paivitaEnnakko(); } };
+    });
     document.getElementById("tiedan").onclick = tiedan;
     document.onkeydown = e => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      // Pohjassa pidetty Enter ei saa painaa seuraavan kuvan Tiedän!-nappia vahingossa
+      if (e.repeat && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); return; }
+      if (!introValmis && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); ohitaIntro(); return; }
       if (t && t.k && !t.k.valmis) {
         if (!t.k.tiedan && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); tiedan(); return; }
         const v = "abcd".indexOf(e.key.toLowerCase());
@@ -381,6 +449,44 @@
     paivita();
     viimeksi = performance.now();
     clearInterval(ajastin); ajastin = setInterval(silmukka, 100);
+    kaynnistaPiirto();
+  }
+
+  function ohitaIntro() {
+    clearTimeout(introAjastin); introAjastin = 0;
+    if (introValmis) return;
+    introValmis = true;
+    const a = document.getElementById("alkuruutu");
+    if (a) { a.classList.add("pois"); setTimeout(() => a.remove(), 250); }
+    aloitaKello();
+  }
+  function aloitaKello() {
+    if (!t || !t.k || kuvaValmis || !kuvaLadattu || !introValmis) return;
+    kuvaValmis = true; viimeksi = performance.now();
+  }
+
+  // Näytön piirto ruudunpäivityksen tahdissa: potti liukuu kohti oikeaa arvoa ja aikapalkki etenee tasaisesti
+  // (pelilogiikka pyörii edelleen 100 ms:n ajastimessa, joka toimii myös taustalla)
+  function kaynnistaPiirto() { if (!rafId) { rafEdellinen = performance.now(); rafId = requestAnimationFrame(piirra); } }
+  function piirra(nyt) {
+    rafId = 0;
+    if (!t || !t.k || !el.potti || !el.potti.isConnected) return;
+    const dt = Math.min(0.1, Math.max(0, (nyt - rafEdellinen) / 1000)); rafEdellinen = nyt;
+    const kohde = P.potti(t), ero = kohde - nayttoPotti;
+    nayttoPotti = Math.abs(ero) < 1 ? kohde : nayttoPotti + ero * Math.min(1, dt * 14);
+    el.potti.textContent = luku(nayttoPotti);
+    el.potti.classList.toggle("lasku", ero < -8);
+    let j = P.jaljella(t);
+    if (kuvaValmis && !t.k.valmis) j = Math.max(0, j - (performance.now() - viimeksi) / 1000);
+    el.aika.firstElementChild.style.width = (100 * j / S.AIKA) + "%";
+    if (!t.k.valmis || nayttoPotti !== kohde) rafId = requestAnimationFrame(piirra);
+  }
+  function paivitaEnnakko() {
+    if (!el.ennakko || !t || !t.k) return;
+    const b = hoverRuutu >= 0 && el.ruudukko.children[hoverRuutu];
+    const nakyy = !!b && kuvaValmis && !t.k.valmis && !t.k.auki[hoverRuutu];
+    if (nakyy) el.ennakko.textContent = "→ " + luku(P.potti(t) - P.hinta(t, hoverRuutu));
+    el.ennakko.classList.toggle("nakyy", nakyy);
   }
 
   // Seinäkello: aika kuluu myös, kun sovellus on taustalla (muuten kuvaa voisi googlata kellon seistessä)
@@ -397,10 +503,8 @@
 
   function paivita() {
     if (!t || !t.k) return;
-    el.potti.textContent = luku(P.potti(t));
-    if (!t.k.valmis) paivitaHinnat();  // hinta on osuus potista, joten se pienenee ajan kuluessa
-    const j = P.jaljella(t);
-    el.aika.firstElementChild.style.width = (100 * j / S.AIKA) + "%";
+    // Potti ja aikapalkki piirretään piirra()-silmukassa
+    if (!t.k.valmis) { paivitaHinnat(); paivitaEnnakko(); }  // hinta on osuus potista, joten se pienenee ajan kuluessa
     const vaihe = kiireVaihe();
     el.aika.classList.toggle("kiire", vaihe >= 1);
     el.aika.classList.toggle("hata", vaihe >= 2);
@@ -426,14 +530,17 @@
   function avaaRuutu(r) {
     if (!t || !kuvaValmis || !P.avaa(t, r)) return;
     el.ruudukko.children[r].classList.add("auki");
+    hoverRuutu = -1;
     paivitaHinnat();
     AANI.ruutu(); napsauta(el.potti); paivita();
   }
-  // Kiinni olevien ruutujen hinnat pisteinä: osuus nykyisestä potista, osuus kasvaa jokaisen avauksen jälkeen
+  // Kiinni olevien ruutujen hinnat pisteinä: osuus nykyisestä potista, osuus kasvaa jokaisen avauksen jälkeen.
+  // DOMiin kirjoitetaan vain muuttunut arvo (ajetaan 10 kertaa sekunnissa; ruudunlukija ei saa turhia ilmoituksia).
   function paivitaHinnat() {
     el.ruudukko.querySelectorAll(".ruutu:not(.auki)").forEach(b => {
-      const r = Number(b.dataset.r), h = P.hinta(t, r);
-      b.dataset.hinta = "−" + h;
+      const r = Number(b.dataset.r), h = P.hinta(t, r), s = "−" + luku(h), sp = b.firstElementChild;
+      if (sp.textContent === s) return;
+      sp.textContent = s;
       b.setAttribute("aria-label", "Avaa ruutu " + (r + 1) + ", hinta " + h + " pistettä");
     });
   }
@@ -461,20 +568,23 @@
   }
 
   function paljasta() {
-    clearInterval(ajastin); ajastin = 0;
+    clearInterval(ajastin); ajastin = 0; clearTimeout(introAjastin); introValmis = true; hoverRuutu = -1;
     const kr = t.kierrokset[t.i], r = t.k.tulos;
-    paivita();
+    const alku = document.getElementById("alkuruutu"); if (alku) alku.remove();
+    paivita(); paivitaEnnakko(); kaynnistaPiirto();
     el.aika.classList.remove("kiire", "hata");
     el.laatikko.classList.add("paljastus");
     el.img.removeAttribute("style");
-    const leima = r.oikein ? "Oikein!" : r.valinta ? "Väärin!" : "Aika loppui";
+    const leima = r.oikein ? "Oikein!" : r.ohitettu ? "Ohitettu" : r.valinta ? "Väärin!" : "Aika loppui";
     // Saadut pisteet suoraan kuvan päälle (Mikko 2026-10-27)
-    el.laatikko.insertAdjacentHTML("beforeend", `<div class="leima ${r.oikein ? "oikein" : "vaarin"}">${leima}<span class="leimapisteet">${r.oikein ? "+" + luku(r.ansio) : "0"} p</span></div>`);
+    el.laatikko.insertAdjacentHTML("beforeend", `<div class="leima ${r.oikein ? "oikein" : "vaarin"}" id="leima" role="status">${leima}<span class="leimapisteet">${r.oikein ? "+" + luku(r.ansio) : "0"} p</span></div>`);
+    const pallotEl = document.getElementById("pallot"); if (pallotEl) pallotEl.outerHTML = pallot();
     const tiedanNappi = document.getElementById("tiedan");
     if (tiedanNappi) tiedanNappi.remove();
     // Paljastus (Mikko 2026-10-27: neljästä värikkäästä napista ei erottanut oikeaa): oikea vihreäksi ✓, oma väärä punaiseksi ✗, muut harmaiksi
     el.ala.querySelectorAll(".vaihto").forEach((b, i) => { b.disabled = true; b.classList.add(kr.vaihtoehdot[i] === kr.oikea ? "oikea" : b.classList.contains("vaarin") ? "valittu" : "pois"); });
-    el.pisteet.textContent = luku(t.pisteet);
+    if (r.oikein && r.ansio > 0) lennataPisteet(t.pisteet - r.ansio, t.pisteet);
+    else { el.pisteet.textContent = luku(t.pisteet); paivitaVertailu(); }
     el.sulaa.textContent = "";
     const viim = t.i === t.kierrokset.length - 1;
     const selitys = r.oikein
@@ -495,6 +605,39 @@
     tallennaKesken(false);
     kotiNappi();
     document.getElementById("seuraava").onclick = () => { AANI.nappi(); if (P.seuraava(t)) kuva(); else loppu(); };
+  }
+
+  // Oikea vastaus: "+853" lentää leimasta Pisteet-lukuun, ja luku laskee ylöspäin. Jos pelaaja jatkaa heti, uusi näkymä
+  // näyttää jo lopullisen luvun (elementit on irrotettu, joten animaatio vain lakkaa).
+  function lennataPisteet(alku, loppu) {
+    const kohde = el.pisteet, lahto = document.getElementById("leima");
+    el.pisteet.textContent = luku(alku);
+    const laske = () => {
+      if (!kohde.isConnected) return;
+      const t0 = performance.now(), kesto = 650;
+      kohde.classList.add("nousee");
+      const askel = nyt => {
+        if (!kohde.isConnected) return;
+        const x = Math.min(1, (nyt - t0) / kesto), e = 1 - Math.pow(1 - x, 3);
+        kohde.textContent = luku(alku + (loppu - alku) * e);
+        if (x < 1) requestAnimationFrame(askel);
+        else { setTimeout(() => kohde.classList.remove("nousee"), 300); paivitaVertailu(); }
+      };
+      requestAnimationFrame(askel);
+    };
+    if (!lahto || matchMedia("(prefers-reduced-motion: reduce)").matches) return laske();
+    setTimeout(() => {
+      if (!kohde.isConnected) return;
+      const a = lahto.getBoundingClientRect(), b = kohde.getBoundingClientRect();
+      const lentaja = document.createElement("div");
+      lentaja.className = "lentava"; lentaja.textContent = "+" + luku(loppu - alku);
+      lentaja.style.left = (a.left + a.width / 2) + "px"; lentaja.style.top = (a.top + a.height / 2) + "px";
+      document.body.appendChild(lentaja);
+      void lentaja.offsetWidth;
+      lentaja.style.left = (b.left + b.width / 2) + "px"; lentaja.style.top = (b.top + b.height / 2) + "px";
+      lentaja.style.opacity = ".2"; lentaja.style.transform = "translate(-50%, -50%) scale(.6)";
+      setTimeout(() => { lentaja.remove(); laske(); }, 600);
+    }, 380);
   }
 
   // Tietoisku Wikipedian johdannosta: mikä se on, tiesitkö ja lähdelinkki (tekstin lisenssi CC BY-SA 4.0)
@@ -608,7 +751,7 @@
     const omat = valittu === "liiga"
       ? `<h2 class="mb-2 mt-5 text-sm font-bold uppercase tracking-widest text-slate-400">Oma liiga (haamut)</h2>${taulu(liigaTaulu())}`
       : "";
-    app.innerHTML = `
+    nayta(`
       ${ylapalkki("Tulostaulut")}
       <div class="valinta valilehdet mb-3" role="tablist">
         <button data-t="liiga" class="${valittu === "liiga" ? "on" : ""}">Viikkoliiga</button>
@@ -616,7 +759,7 @@
       </div>
       ${VERKKO.kaytossa ? `<section id="maailma"><p class="text-sm text-slate-400">Ladataan…</p></section>` : `<p class="text-sm text-slate-400">Globaali tulostaulu ei ole käytössä tässä versiossa.</p>`}
       ${omat}
-      <div class="mt-4">${alkuunNappi()}</div>`;
+      <div class="mt-4">${alkuunNappi()}</div>`);
     kotiNappi(); kytkeAlkuun();
     app.querySelectorAll("[data-t]").forEach(b => b.onclick = () => tulostaulut(b.dataset.t));
     if (VERKKO.kaytossa) maailma(valittu, 20);
@@ -635,13 +778,13 @@
     const nousu = ennen - sija;
     const yht = yhteenveto();
     pysayta();
-    app.innerHTML = `
+    nayta(`
       ${ylapalkki("Viikkoliiga")}
       ${yht}
       <div class="my-4 text-center text-lg font-extrabold">${nousu > 0 ? `Nousit ${nousu} sijaa! Nyt ${sija}.` : `Sijasi: ${sija}.`} <span class="text-sm font-normal text-slate-400">Viikon paras ${luku(l.paras)} p · ${l.ottelut} ${l.ottelut === 1 ? "ottelu" : "ottelua"}${ennatys ? " · uusi ennätys!" : ""}</span></div>
       <div class="mb-4 grid grid-cols-2 gap-2"><button class="nappi paa" id="uusi">Uusi ottelu</button>${alkuunNappi()}</div>
       ${taulu(rivit)}
-      ${maailmaPaikka()}`;
+      ${maailmaPaikka()}`);
     kotiNappi(); kytkeAlkuun(); maailma("liiga");
     document.getElementById("uusi").onclick = aloitaLiiga;
   }
@@ -651,13 +794,13 @@
     const putki = P.putkiPaivina(lue("paiva", {}), new Date());
     const rivi = String(tulos.ruudukko).replace(/🟩/g, "✅").replace(/🟥/g, "❌");   // vanhat tallennetut tulokset
     const teksti = P.jakoPaiva(luku(tulos.pisteet).replace(/\s/g, " "), putki) + "\n" + rivi + (osoite() ? "\n" + osoite() : "");
-    app.innerHTML = `
+    nayta(`
       ${ylapalkki("Päivän haaste")}
       ${yht || `<div class="paneeli grid gap-1 p-5 text-center"><div class="text-xs uppercase tracking-widest text-slate-400">Tänään pelattu</div><div class="potti" style="font-size:3.2rem">${luku(tulos.pisteet)} p</div><div class="text-2xl">${rivi}</div></div>`}
       <div class="my-4 text-center text-2xl font-extrabold">🔥 ${putki} ${putki === 1 ? "päivä" : "päivää"} putkeen!</div>
       <p class="mb-4 text-center text-sm text-slate-400">Uusi haaste huomenna. Kaikki pelaavat tänään samat viisi kuvaa.</p>
       <div class="grid gap-2">${jakoNapit(teksti)}<button class="nappi syaani" id="liigaan">Pelaa viikkoliigaa</button>${alkuunNappi()}</div>
-      ${maailmaPaikka()}`;
+      ${maailmaPaikka()}`);
     kotiNappi(); kytkeKopio(teksti); kytkeAlkuun(); maailma("paiva");
     document.getElementById("liigaan").onclick = aloitaLiiga;
   }
@@ -686,7 +829,7 @@
     const karki = rivit[0];
     const teksti = `Mikä tää o? -kaverihaaste ${h.koodi}\n` + (tila.oma != null ? `Sain ${luku(tila.oma).replace(/\s/g, " ")} p. ` : "") + `Pystytkö parempaan?\n` +
       `Pelaa samat kuvat tästä:\n${linkki}` + (karki ? `\nKärjessä: ${karki.nimi} ${luku(karki.pisteet).replace(/\s/g, " ")} p` : "");
-    app.innerHTML = `
+    nayta(`
       ${ylapalkki("Kaverihaaste " + h.koodi)}
       ${yht || ""}
       <div class="paneeli my-4 grid gap-1 p-4 text-center">
@@ -702,7 +845,7 @@
         ${tila.oma == null ? `<button class="nappi paa" id="pelaa">Pelaa haaste</button>` : ""}
         ${jakoNapit(teksti)}
         ${alkuunNappi()}
-      </div>`;
+      </div>`);
     kotiNappi(); kytkeKopio(teksti); kytkeAlkuun();
     haasteVerkosta(h);
     const p = document.getElementById("pelaa");

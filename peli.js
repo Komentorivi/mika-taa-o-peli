@@ -169,6 +169,12 @@ const PELI = (() => {
     lopeta(t, true, ansio, { valinta });
     return "oikein";
   }
+  // Kuva ei latautunut: ohitetaan ilman pisteitä (viimeistely 2026-11-13: ennen kello söi pisteet tyhjän ruudun edessä)
+  function ohita(t) {
+    if (!t.k || t.k.valmis) return false;
+    lopeta(t, false, 0, { ohitettu: true });
+    return true;
+  }
   function lopeta(t, oikein, ansio, lisa) {
     const k = t.k;
     k.valmis = true;
@@ -263,10 +269,10 @@ const PELI = (() => {
   // Jaettava rivi ilman vastauksia: ✅ oikein, ❌ väärin tai aika loppui. Mikko 2026-10-28: värilliset neliöt (2019)
   // näkyivät WhatsAppissa kysymysmerkkeinä vanhemmilla laitteilla; ✅ ja ❌ (2010) toimivat kaikkialla.
   function ruudukko(tulokset) {
-    return tulokset.map(x => x.oikein ? "✅" : "❌").join("");
+    return tulokset.map(x => x.oikein ? "✅" : x.ohitettu ? "⬜" : "❌").join("");
   }
 
-  return { S, hash, rng, sekoita, valitse, kierros, harhat, taso, lahikuva, paikka, perusosuus, osuus, hinta, sulanut, sulamisvauhti, uusi, aloita, potti, jaljella, avaa, tiedan, kulu, vastaa, seuraava,
+  return { S, hash, rng, sekoita, valitse, kierros, harhat, taso, lahikuva, paikka, perusosuus, osuus, hinta, sulanut, sulamisvauhti, uusi, aloita, potti, jaljella, avaa, tiedan, kulu, vastaa, ohita, seuraava,
     pvm, viikko, viikonOsuus, putkiPaivina, haamut, HAAMUT, uusiKoodi, lueKoodi, puhdasNimi, tuloksetLinkkiin, tuloksetLinkista, lueHash, jakoPaiva, ruudukko };
 })();
 if (typeof module !== "undefined") module.exports = PELI;
